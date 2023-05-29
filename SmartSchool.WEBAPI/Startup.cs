@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using SmartSchool.WEBAPI.Data;
+
 namespace SmartSchool.WebAPI
 {
     public class Startup
@@ -12,7 +15,10 @@ namespace SmartSchool.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddDbContext<DataContext> (
+                context => context.UseSqlServer(Configuration.GetConnectionString("Default"))
+            );
+           services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
