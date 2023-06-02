@@ -9,77 +9,81 @@ namespace SmartSchool.WEBAPI.Controllers
     [Route("api/[controller]")]
     public class StudentController: ControllerBase
     {
-        private readonly DataContext _context;
-        public StudentController(DataContext context){
-            _context = context;
+     
+        private readonly IRepository _repo;
+        public StudentController( IRepository repo){
+            
+            _repo = repo;
         }       
         
         [HttpGet]
         public IActionResult Get(){
-            return Ok(_context.Students);
+
+           var students = _repo.GetAllStudents(true);
+
+           return Ok (students);
+
         }
 
         // api/student/byId
-        [HttpGet("byId/{id}")]
+        [HttpGet("{id}")]
         public IActionResult GetById(int Id){
 
-            var student = _context.Students.FirstOrDefault(a => a.Id == Id);
+            var student = _repo.GetStudentById(Id, false);
             if(student == null) return BadRequest("Student not found");
             return Ok(student);
-        }
+        }       
         
-        // api/student/name
-        [HttpGet("ByName")]
-        public IActionResult GetByName(string name, string surname)
-        {
-            var student = _context.Students.FirstOrDefault(a => 
-                a.Name.Contains(name) && a.Surname.Contains(surname)
-            );
-            if (student == null) return BadRequest("Student not found");
-
-            return Ok(student);
-        }
 
          // api/student
         [HttpPost]
         public IActionResult Post(Student student)
         {
-            _context.Add(student);
-            _context.SaveChanges();
-            return Ok(student);
+            _repo.Add(student);
+
+            if(_repo.SaveChanges()){
+                return Ok(student);
+            }
+            return BadRequest("Student not Found");
         }
 
         // api/student
         [HttpPut("{id}")]
         public IActionResult Put(int id, Student student)
         {
-            var people = _context.Students.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            var people = _repo.GetStudentById(id);
             if(people ==null) return BadRequest("Student not found");
-            _context.Update(student);
-            _context.SaveChanges();
-            return Ok(student);
+            _repo.Update(student);
+            if(_repo.SaveChanges()){
+                return Ok(student);
+            }
+            return BadRequest("Student not found");
         }
 
         // api/student
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, Student student)
         {
-            var people = _context.Students.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            var people = _repo.GetStudentById(id);
             if(people ==null) return BadRequest("Student not found");
-            _context.Add(student);
-            _context.SaveChanges();
-            return Ok(student);
+           _repo.Update(student);
+            if(_repo.SaveChanges()){
+                return Ok(student);
+            }
+            return BadRequest("Student not found");
         }
 
         // api/student
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var student = _context.Students.FirstOrDefault(a => a.Id == id);
+            var student = _repo.GetStudentById(id);
             if(student==null) return BadRequest("Student not found");
-            _context.Remove(student);
-            _context.SaveChanges();
-            return Ok();
+            _repo.Delete(student);
+            if(_repo.SaveChanges()){
+                return Ok("student Delet");
+            }
+            return BadRequest("Student not found");
         }
     }
 }
