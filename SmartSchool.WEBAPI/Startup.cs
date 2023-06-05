@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SmartSchool.WEBAPI.Data;
 
@@ -17,12 +18,13 @@ namespace SmartSchool.WebAPI
         {
             services.AddDbContext<DataContext> (
                 context => context.UseSqlServer(Configuration.GetConnectionString("Default"))
-            );
-            services.AddScoped<IRepository, Repository>();
+            );           
            services.AddControllers()
                     .AddNewtonsoftJson(
                         opt => opt.SerializerSettings.ReferenceLoopHandling =
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<IRepository, Repository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
