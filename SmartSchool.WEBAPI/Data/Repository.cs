@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SmartSchool.WEBAPI.Helpers;
 using SmartSchool.WEBAPI.Models;
 
 namespace SmartSchool.WEBAPI.Data
 {
     public class Repository : IRepository
     {
+        private readonly DataContext _context;      
 
-        private readonly DataContext _context;       
-        
         public Repository(DataContext context)
         {
             _context = context;            
@@ -33,7 +29,7 @@ namespace SmartSchool.WEBAPI.Data
             return (_context.SaveChanges() >0);
         }
         
-        public Student[] GetAllStudents(bool includeTeacher)
+        public Student[] GetAllStudents(bool includeTeacher = false)
         {
             IQueryable<Student> query = _context.Students;
 
@@ -46,7 +42,38 @@ namespace SmartSchool.WEBAPI.Data
             
             return query.ToArray();
         }
+        public async Task<PageList<Student>> GetAllStudentsAsync(
+                                        PageParams pageParams,
+                                        bool includeTeacher = false)
+        {
+            IQueryable<Student> query = _context.Students;
 
+            if(includeTeacher){
+                query = query.Include(s=> s.StudentSubjects)
+                .ThenInclude(ss => ss.Subject)
+                .ThenInclude(s => s.Teacher);
+            }
+            query = query.AsNoTracking().OrderBy(s => s.Id);
+           
+            if (!string.IsNullOrEmpty(pageParams.Name))
+                query = query.Where(student => student.Name
+                                                  .ToUpper()
+                                                  .Contains(pageParams.Name.ToUpper()) ||
+                                                student.Surname
+                                                  .ToUpper()
+                                                  .Contains(pageParams.Name.ToUpper()));
+
+            if (pageParams.Enroll > 0)
+                query = query.Where(student => student.Enroll == pageParams.Enroll);
+
+            if (pageParams.Active != null)
+                query = query.Where(student => student.Active == (pageParams.Active != 0));                
+
+         
+            
+             // return await query.ToListAsync();
+            return await PageList<Student>.CreateAsync(query, pageParams.PageNumber, pageParams.PageSize);
+        }
         public Student GetStudentById( int studentId, bool includeTeacher = false)
         {
             IQueryable<Student> query = _context.Students;
@@ -126,5 +153,6 @@ namespace SmartSchool.WEBAPI.Data
             
             return query.FirstOrDefault();
         }
+
     }
 }

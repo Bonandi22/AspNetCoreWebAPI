@@ -1,3 +1,4 @@
+using SmartSchool.WEBAPI.Helpers;
 using SmartSchool.WEBAPI.Models;
 
 namespace SmartSchool.WEBAPI.Data
@@ -11,19 +12,17 @@ namespace SmartSchool.WEBAPI.Data
         bool SaveChanges();
 
         //Student
-         Student[] GetAllStudents(bool includeTeacher);
+        Task<PageList<Student>> GetAllStudentsAsync(
+                                        PageParams pageParams,
+                                        bool includeTeacher = false);
+         Student[] GetAllStudents(bool includeTeacher = false);
          Student GetStudentById( int studentId, bool includeTeacher = false);
          Student GetStudentBySubject(int subjectId, bool includeTeacher = false);        
 
         //Teacher
-
         Teacher[] GetAllTeachers(bool includeStudent);
          Teacher GetTeacherById(int teacherId, bool includeStudent = false);
-         Teacher GetTeacherBySubject(int subjectId, bool includeStudent = false );
-         
-       
-
-
+         Teacher GetTeacherBySubject(int subjectId, bool includeStudent = false );           
 
     }
 }

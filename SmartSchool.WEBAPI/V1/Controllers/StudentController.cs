@@ -3,6 +3,7 @@ using AutoMapper;
 using SmartSchool.WEBAPI.Data;
 using SmartSchool.WEBAPI.Models;
 using SmartSchool.WEBAPI.V1.Dtos;
+using SmartSchool.WEBAPI.Helpers;
 
 namespace SmartSchool.WEBAPI.V1.Controllers
 {
@@ -24,10 +25,15 @@ namespace SmartSchool.WEBAPI.V1.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Get(){
+        public async Task<IActionResult> Get([FromQuery] PageParams pageParams){
             
-           var students = _repo.GetAllStudents(true);          
-           return Ok (_mapper.Map<IEnumerable<StudentDto>>(students));
+          var student = await _repo.GetAllStudentsAsync(pageParams, true);
+
+            var studentResult = _mapper.Map<IEnumerable<StudentDto>>(student);
+
+            Response.AddPagination(student.CurrentPage, student.PageSize, student.TotalCount, student.TotalPages);
+
+            return Ok(studentResult);
         }
 
         // api/student/byId
