@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SmartSchool.WEBAPI.Models;
 
-namespace SmartSchool.WEBAPI.Dtos
+namespace SmartSchool.WEBAPI.V2.Dtos
 {
     public class StudentRegisterDto
     {

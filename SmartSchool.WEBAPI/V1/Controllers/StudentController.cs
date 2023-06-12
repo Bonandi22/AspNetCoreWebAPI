@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using SmartSchool.WEBAPI.Data;
-using SmartSchool.WEBAPI.Dtos;
 using SmartSchool.WEBAPI.Models;
+using SmartSchool.WEBAPI.V1.Dtos;
 
-namespace SmartSchool.WEBAPI.Controllers
+namespace SmartSchool.WEBAPI.V1.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class StudentController: ControllerBase
     {     
         private readonly IRepository _repo;
@@ -19,9 +19,13 @@ namespace SmartSchool.WEBAPI.Controllers
             _repo = repo;
             _mapper = mapper;
         }       
-
+         /// <summary>
+        /// Método responsável para retornar todos os meus alunos
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Get(){
+            
            var students = _repo.GetAllStudents(true);          
            return Ok (_mapper.Map<IEnumerable<StudentDto>>(students));
         }
@@ -44,7 +48,7 @@ namespace SmartSchool.WEBAPI.Controllers
             var student = _mapper.Map<Student>(model);
             _repo.Add(student);
             if(_repo.SaveChanges()){
-                return Created($"/api/student/{model.Id}", 
+                return Created($"/api/Student/{model.Id}", 
                                 _mapper.Map<StudentDto>(student));
             }
             return BadRequest("Student not Found");
@@ -61,7 +65,7 @@ namespace SmartSchool.WEBAPI.Controllers
             
             _repo.Update(student);
             if(_repo.SaveChanges()){
-                return Created($"/api/student/{model.Id}", 
+                return Created($"/api/Student/{model.Id}", 
                                 _mapper.Map<StudentDto>(student));
             }
             return BadRequest("Student not found");
@@ -78,7 +82,7 @@ namespace SmartSchool.WEBAPI.Controllers
 
            _repo.Update(student);
             if(_repo.SaveChanges()){
-                return Created($"/api/student/{model.Id}", 
+                return Created($"/api/Student/{model.Id}", 
                                 _mapper.Map<StudentDto>(student));
             }
             return BadRequest("Student not found");

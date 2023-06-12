@@ -1,8 +1,9 @@
 using AutoMapper;
-using SmartSchool.WEBAPI.Dtos;
+using SmartSchool.WEBAPI.Helpers;
 using SmartSchool.WEBAPI.Models;
+using SmartSchool.WEBAPI.V1.Dtos;
 
-namespace SmartSchool.WEBAPI.Helpers
+namespace SmartSchool.WEBAPI.V2.Helpers
 {
     public class DataContextProfile: Profile
     {

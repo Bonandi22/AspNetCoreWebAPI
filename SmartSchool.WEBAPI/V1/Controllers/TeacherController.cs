@@ -1,19 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using SmartSchool.WEBAPI.Data;
 using SmartSchool.WEBAPI.Models;
-using SmartSchool.WEBAPI.Dtos;
+using SmartSchool.WEBAPI.V1.Dtos;
 
-namespace SmartSchool.WEBAPI.Controllers
+namespace SmartSchool.WEBAPI.V1.ControllersControllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class TeacherController:ControllerBase
+    [ApiVersion("2.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    public class TeacherController : ControllerBase
     {
         private readonly IRepository _repo;
          private readonly IMapper _mapper;
-
         public TeacherController( IRepository repo, IMapper mapper){
             
             _repo = repo;
@@ -41,10 +40,10 @@ namespace SmartSchool.WEBAPI.Controllers
         [HttpPost]
         public IActionResult Post(TeacherDto model)
         {
-            var teacher = _mapper.Map<Student>(model);
+            var teacher = _mapper.Map<Teacher>(model);
             _repo.Add(teacher);
             if(_repo.SaveChanges()){
-                return Created($"/api/teacher/{model.Id}", 
+                return Created($"/api/Teacher/{model.Id}", 
                                 _mapper.Map<TeacherDto>(teacher));
             }
             return BadRequest("Teacher not Found");
@@ -59,7 +58,7 @@ namespace SmartSchool.WEBAPI.Controllers
             _mapper.Map(model, teacher);
             _repo.Update(teacher);
             if(_repo.SaveChanges()){
-                return Created($"/api/teacher/{model.Id}", 
+                return Created($"/api/Teacher/{model.Id}", 
                                 _mapper.Map<TeacherDto>(teacher));
             }
             return BadRequest("Teacher not found");
@@ -74,7 +73,7 @@ namespace SmartSchool.WEBAPI.Controllers
             _mapper.Map(model, teacher);
             _repo.Update(teacher);
             if(_repo.SaveChanges()){
-                return Created($"/api/teacher/{model.Id}", 
+                return Created($"/api/Teacher/{model.Id}", 
                                 _mapper.Map<TeacherDto>(teacher));
             }
             return BadRequest("Teacher not found");
