@@ -38,10 +38,11 @@ namespace SmartSchool.WEBAPI.V1.Controllers
 
         // api/student/byId
         [HttpGet("{id}")]
-        public IActionResult GetById(int Id){
+        public async Task<IActionResult> GetById(int id){
 
-            var student = _repo.GetStudentById(Id, false);
-            if(student == null) return BadRequest("Student not found");
+            var student = await _repo.GetStudentById(id, false);
+            if (student == null)
+                return BadRequest("Student not found");
             var studentDto = _mapper.Map<StudentDto>(student);
             return Ok(studentDto);
         }       

@@ -2,12 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using SmartSchool.WEBAPI.Data;
 using SmartSchool.WEBAPI.Models;
+using SmartSchool.WEBAPI.Helpers;
 using SmartSchool.WEBAPI.V1.Dtos;
 
-namespace SmartSchool.WEBAPI.V1.ControllersControllers
+namespace SmartSchool.WEBAPI.V1.Controllers
 {
     [ApiController]
-    [ApiVersion("2.0")]
+    [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class TeacherController : ControllerBase
     {
@@ -18,19 +19,24 @@ namespace SmartSchool.WEBAPI.V1.ControllersControllers
             _repo = repo;
             _mapper = mapper;
         }             
-        
+        // api/teacher
         [HttpGet]
-        public IActionResult Get(){
+       public async Task<IActionResult> Get([FromQuery] PageParams pageParams){
             
-            var teacher = _repo.GetAllTeachers(true);
-            return Ok (_mapper.Map<IEnumerable<TeacherDto>>(teacher));
+          var teacher = await _repo.GetAllTeachersAsync(pageParams, true);
+
+          var teacherResult = _mapper.Map<IEnumerable<TeacherDto>>(teacher);
+
+          Response.AddPagination(teacher.CurrentPage, teacher.PageSize, teacher.TotalCount, teacher.TotalPages);
+
+          return Ok(teacherResult);
         }
 
         // api/teacher/byId
         [HttpGet("{id}")]
-        public IActionResult GetById(int Id){
-
-            var teacher = _repo.GetTeacherById(Id, false);
+        public async Task<IActionResult> GetById(int id){
+            
+            var teacher = await _repo.GetTeacherById(id, false);
             if(teacher == null) return BadRequest("Teacher not found");
             var teacherDto = _mapper.Map<TeacherDto>(teacher);
             return Ok(teacher);
