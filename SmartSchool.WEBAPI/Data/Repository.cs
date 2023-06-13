@@ -29,6 +29,7 @@ namespace SmartSchool.WEBAPI.Data
             return (_context.SaveChanges() >0);
         }
         
+        //Students
         public Student[] GetAllStudents(bool includeTeacher = false)
         {
             IQueryable<Student> query = _context.Students;
@@ -74,7 +75,7 @@ namespace SmartSchool.WEBAPI.Data
              // return await query.ToListAsync();
             return await PageList<Student>.CreateAsync(query, pageParams.PageNumber, pageParams.PageSize);
         }
-        public async Task<Student> GetStudentById( int studentId, bool includeTeacher = false)
+        public async Task<Student> GetStudentByIdAsync( int studentId, bool includeTeacher = false)
         {
             IQueryable<Student> query = _context.Students;
 
@@ -90,7 +91,7 @@ namespace SmartSchool.WEBAPI.Data
             return await Task.FromResult(query.FirstOrDefault());
         }
 
-        public Student GetStudentBySubject(int subjectId, bool includeTeacher = false)
+        public async Task<Student> GetStudentBySubjectAsync(int subjectId, bool includeTeacher = false)
         {
              IQueryable<Student> query = _context.Students;
 
@@ -103,9 +104,10 @@ namespace SmartSchool.WEBAPI.Data
                         .OrderBy(s => s.Id)
                         .Where(s => s.StudentSubjects.Any(ss => ss.SubjectId == subjectId));
             
-            return query.FirstOrDefault();
+            return await Task.FromResult(query.FirstOrDefault());
         }
 
+        //Teachers
         public Teacher[] GetAllTeachers(bool includeStudent)
         {
             IQueryable<Teacher> query = _context.Teachers;
@@ -149,7 +151,7 @@ namespace SmartSchool.WEBAPI.Data
              return await PageList<Teacher>.CreateAsync(query, pageParams.PageNumber, pageParams.PageSize);
         }
 
-        public async Task<Teacher> GetTeacherById(int teacherId, bool includeStudent = false)
+        public async Task<Teacher> GetTeacherByIdAsync(int teacherId, bool includeStudent = false)
         {
              IQueryable<Teacher> query = _context.Teachers;
 
@@ -165,7 +167,7 @@ namespace SmartSchool.WEBAPI.Data
             return await Task.FromResult(query.FirstOrDefault());
         }
 
-        public Teacher GetTeacherBySubject(int subjectId, bool includeStudent = false )
+        public async Task<Teacher> GetTeacherBySubjectAsync(int subjectId, bool includeStudent = false )
         {
             IQueryable<Teacher> query = _context.Teachers;
 
@@ -180,7 +182,7 @@ namespace SmartSchool.WEBAPI.Data
                         (s => s.StudentSubjects.Any(ss => ss.SubjectId == subjectId )));
 
             
-            return query.FirstOrDefault();
+            return await Task.FromResult(query.FirstOrDefault());
         }
 
     }

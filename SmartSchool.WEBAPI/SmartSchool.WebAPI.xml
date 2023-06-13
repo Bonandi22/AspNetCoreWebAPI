@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SmartSchool.WEBAPI</name>
+    </assembly>
+    <members>
+        <member name="M:SmartSchool.WEBAPI.V1.Controllers.StudentController.Get(SmartSchool.WEBAPI.Helpers.PageParams)">
+            <summary>
+            Método responsável para retornar todos os meus alunos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartSchool.WEBAPI.V2.Controllers.StudentController.Get(SmartSchool.WEBAPI.Helpers.PageParams)">
+            <summary>
+            Método responsável para retornar todos os meus alunos
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

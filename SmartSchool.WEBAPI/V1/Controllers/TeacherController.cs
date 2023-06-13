@@ -36,7 +36,7 @@ namespace SmartSchool.WEBAPI.V1.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id){
             
-            var teacher = await _repo.GetTeacherById(id, false);
+            var teacher = await _repo.GetTeacherByIdAsync(id, false);
             if(teacher == null) return BadRequest("Teacher not found");
             var teacherDto = _mapper.Map<TeacherDto>(teacher);
             return Ok(teacher);
@@ -57,9 +57,9 @@ namespace SmartSchool.WEBAPI.V1.Controllers
 
         // api/teacher
         [HttpPut("{id}")]
-        public IActionResult Put(int id, TeacherDto model)
+        public async Task<IActionResult> Put(int id, TeacherDto model)
         {
-            var teacher =  _repo.GetTeacherById(id, false);
+            var teacher = await _repo.GetTeacherByIdAsync(id, false);
             if(teacher ==null) return BadRequest("Teacher not found");
             _mapper.Map(model, teacher);
             _repo.Update(teacher);
@@ -72,11 +72,11 @@ namespace SmartSchool.WEBAPI.V1.Controllers
 
         // api/teacher
         [HttpPatch("{id}")]
-        public IActionResult Patch(int id, TeacherDto model)
+        public  async Task<IActionResult>  Patch(int id, TeacherDto model)
         {
-            var teacher =  _repo.GetTeacherById(id, false);
+            var teacher = await _repo.GetTeacherByIdAsync(id, false);
             if(teacher ==null) return BadRequest("Teacher not found");
-            _mapper.Map(model, teacher);
+             _mapper.Map(model, teacher);
             _repo.Update(teacher);
             if(_repo.SaveChanges()){
                 return Created($"/api/Teacher/{model.Id}", 
@@ -87,17 +87,15 @@ namespace SmartSchool.WEBAPI.V1.Controllers
 
         // api/teacher
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var teacher = _repo.GetTeacherById(id, false);
+            var teacher = await _repo.GetTeacherByIdAsync(id, false);
             if(teacher==null) return BadRequest("Teacher not found");
-            _repo.Delete(teacher);
+             _repo.Delete(teacher);
             if(_repo.SaveChanges()){
                 return Ok("Teacher Delet");
             }
             return BadRequest("Teacher not found");
-        }
-
-        
+        }        
     }
 }

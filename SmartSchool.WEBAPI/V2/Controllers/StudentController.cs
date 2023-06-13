@@ -40,7 +40,7 @@ namespace SmartSchool.WEBAPI.V2.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id){
 
-            var student = await _repo.GetStudentById(id, false);
+            var student = await _repo.GetStudentByIdAsync(id, false);
             if (student == null)
                 return BadRequest("Student not found");
             var studentDto = _mapper.Map<StudentDto>(student);
@@ -62,9 +62,9 @@ namespace SmartSchool.WEBAPI.V2.Controllers
 
         // api/student
         [HttpPut("{id}")]
-        public IActionResult Put(int id, StudentRegisterDto model)
+        public  async Task<IActionResult> Put(int id, StudentRegisterDto model)
         {
-            var student = _repo.GetStudentById(id);
+            var student = await _repo.GetStudentByIdAsync(id);
             if(student ==null) return BadRequest("Student not found");
 
             _mapper.Map(model, student);
@@ -79,9 +79,9 @@ namespace SmartSchool.WEBAPI.V2.Controllers
 
         // api/student
         [HttpPatch("{id}")]
-        public IActionResult Patch(int id, StudentRegisterDto model)
+        public  async Task<IActionResult> Patch(int id, StudentRegisterDto model)
         {
-            var student = _repo.GetStudentById(id);
+            var student = await _repo.GetStudentByIdAsync(id);
             if(student ==null) return BadRequest("Student not found");
 
              _mapper.Map(model, student);
@@ -96,9 +96,9 @@ namespace SmartSchool.WEBAPI.V2.Controllers
 
         // api/student
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public  async Task<IActionResult> Delete(int id)
         {
-            var student = _repo.GetStudentById(id);
+            var student = await _repo.GetStudentByIdAsync(id);
             if(student==null) return BadRequest("Student not found");
             _repo.Delete(student);
             if(_repo.SaveChanges()){

@@ -1,4 +1,3 @@
-using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -20,7 +19,8 @@ namespace SmartSchool.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext> (
-                context => context.UseSqlServer(Configuration.GetConnectionString("Default"))
+                context => context.UseMySql(Configuration.GetConnectionString("MySqlConnection"), 
+                new MySqlServerVersion(new Version()))
             );           
            services.AddControllers()
                     .AddNewtonsoftJson(
@@ -64,7 +64,7 @@ namespace SmartSchool.WebAPI
                             Contact = new Microsoft.OpenApi.Models.OpenApiContact
                             {
                                 Name = "Elker Bonandi",
-                                Email = "",
+                                Email = "elkerbonandi@gmail.com",
                                 Url = new Uri("http://programadamente.com")
                             }
                         }    
