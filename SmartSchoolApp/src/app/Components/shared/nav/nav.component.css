@@ -1,0 +1,7 @@
+.navbar-large-font .nav-link {
+  font-size: 20px; /* Tamanho da fonte desejado */
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  font-weight: bold;
+}
